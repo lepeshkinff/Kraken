@@ -137,3 +137,5 @@ Web/TourBooking.Web/Scripts/TourBooking/appCore.js.map
 
 # Rider options
 .idea/
+*.config
+appsettings.json
