@@ -41,11 +41,16 @@ namespace Kraken
 
 		private void button1_Click(object sender, EventArgs e)
 		{
-			using (var fbd = new FolderBrowserDialog())
+			using (var fbd = new FolderBrowserDialog
 			{
-				if (string.IsNullOrWhiteSpace(selectedPathLabel.Text))
+				ShowNewFolderButton = false,
+				Description = "Укажите папку солюшена, файлы коныигураций которого надо подменить",
+			})
+			{
+				if (!string.IsNullOrWhiteSpace(selectedPathLabel.Text))
 				{
 					fbd.SelectedPath = selectedPathLabel.Text;
+					SendKeys.Send("{TAB}{TAB}{RIGHT}");
 				}
 
 				var result = fbd.ShowDialog();
@@ -60,7 +65,7 @@ namespace Kraken
 		{
 			try
 			{
-				if(string.IsNullOrWhiteSpace(selectedPathLabel.Text))
+				if (string.IsNullOrWhiteSpace(selectedPathLabel.Text))
 				{
 					MessageBox.Show("А шо ж вы папку солюшена, то не выбрали?");
 					return;
