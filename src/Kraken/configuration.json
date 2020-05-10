@@ -1,0 +1,15 @@
+/*
+[
+	{
+		"Id": "8682B238-65D8-43E7-98E2-E24BB739E195",
+		"ComponentName": "OctopusComponentName",
+		"PathToFile": "Path/To/File/Local/appsettings.json",
+		"OctopusProject": "Some Octopus Project",
+		"OctopusArtifactName": "SomeArtifact.json",
+		"Substitutions": {
+			"add key=\"SomeKey\" value=\".*\"": "add key=\"SomeKey\" value=\"/\""
+		}
+	}
+]
+*/
+[]
