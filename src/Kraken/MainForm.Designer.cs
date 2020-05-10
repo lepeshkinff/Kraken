@@ -37,6 +37,9 @@
 			this.configurationsList = new System.Windows.Forms.ListBox();
 			this.label4 = new System.Windows.Forms.Label();
 			this.selectedPathLabel = new System.Windows.Forms.Label();
+			this.hideAllPanel = new System.Windows.Forms.Panel();
+			this.progressBar = new System.Windows.Forms.ProgressBar();
+			this.hideAllPanel.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// button1
@@ -117,11 +120,28 @@
 			this.selectedPathLabel.Size = new System.Drawing.Size(0, 13);
 			this.selectedPathLabel.TabIndex = 8;
 			// 
+			// hideAllPanel
+			// 
+			this.hideAllPanel.Controls.Add(this.progressBar);
+			this.hideAllPanel.Location = new System.Drawing.Point(12, 12);
+			this.hideAllPanel.Name = "hideAllPanel";
+			this.hideAllPanel.Size = new System.Drawing.Size(393, 349);
+			this.hideAllPanel.TabIndex = 9;
+			this.hideAllPanel.Visible = false;
+			// 
+			// progressBar
+			// 
+			this.progressBar.Location = new System.Drawing.Point(35, 147);
+			this.progressBar.Name = "progressBar";
+			this.progressBar.Size = new System.Drawing.Size(321, 23);
+			this.progressBar.TabIndex = 0;
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(417, 373);
+			this.Controls.Add(this.hideAllPanel);
 			this.Controls.Add(this.selectedPathLabel);
 			this.Controls.Add(this.label4);
 			this.Controls.Add(this.configurationsList);
@@ -137,6 +157,7 @@
 			this.ShowIcon = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Выпустить Кракена!";
+			this.hideAllPanel.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -152,5 +173,7 @@
 		private System.Windows.Forms.ListBox configurationsList;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.Label selectedPathLabel;
+		private System.Windows.Forms.Panel hideAllPanel;
+		private System.Windows.Forms.ProgressBar progressBar;
 	}
 }

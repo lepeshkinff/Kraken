@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Kraken
@@ -63,8 +64,10 @@ namespace Kraken
 
 		private async void button2_Click(object sender, EventArgs e)
 		{
+			var cts = new CancellationTokenSource();
 			try
 			{
+				Progress(cts.Token);
 				if (string.IsNullOrWhiteSpace(selectedPathLabel.Text))
 				{
 					MessageBox.Show("А шо ж вы папку солюшена, то не выбрали?");
@@ -87,7 +90,6 @@ namespace Kraken
 				var item = configurationsList.SelectedItem as string;
 
 				var matchingCofigurtions = fileConfigurations[item];
-
 				await octopusWorker.ApplyConfigurations(selectedPathLabel.Text, matchingCofigurtions, environment);
 				MessageBox.Show("Готово!");
 			}
@@ -95,6 +97,28 @@ namespace Kraken
 			{
 				MessageBox.Show($"чёт не вышло {ex}");
 			}
+			finally
+			{
+				cts.Cancel();
+			}
+		}
+
+		private async void Progress(CancellationToken cancellationToken)
+		{
+			hideAllPanel.Visible = true;
+
+			var i = 0;
+			while (!cancellationToken.IsCancellationRequested)
+			{
+				progressBar.Value = i;
+				if (i == 100)
+				{
+					i = 0;
+				}
+				i++;
+			}
+
+			hideAllPanel.Visible = false;
 		}
 	}
 }
