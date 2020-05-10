@@ -121,7 +121,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(456, 504);
+			this.ClientSize = new System.Drawing.Size(417, 373);
 			this.Controls.Add(this.selectedPathLabel);
 			this.Controls.Add(this.label4);
 			this.Controls.Add(this.configurationsList);
@@ -131,8 +131,12 @@
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.EnvironmentTb);
 			this.Controls.Add(this.button1);
+			this.MaximizeBox = false;
+			this.MinimizeBox = false;
 			this.Name = "MainForm";
-			this.Text = "MainForm";
+			this.ShowIcon = false;
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+			this.Text = "Выпустить Кракена!";
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
