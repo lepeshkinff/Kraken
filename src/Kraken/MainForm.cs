@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Kraken
@@ -110,6 +111,7 @@ namespace Kraken
 			var i = 0;
 			while (!cancellationToken.IsCancellationRequested)
 			{
+				await Task.Delay(200);
 				progressBar.Value = i;
 				if (i == 100)
 				{
