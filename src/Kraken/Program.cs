@@ -21,8 +21,10 @@ namespace Kraken
 			}
 			var configurationPath = ConfigurationManager.AppSettings["configurationPath"] ?? Assembly.GetExecutingAssembly().Location;
 			var environment = Environment.GetEnvironmentVariable("OctopusEnvironment") ?? ConfigurationManager.AppSettings["OctopusEnvironment"];
+			var folder = ConfigurationManager.AppSettings["solutionsFoldeer"];
 
 			var form = new MainForm(
+				folder,
 				environment,
 				new OctopusWorker(
 					new ArtifactsProvider(octopusApiKey, octopusEndpoint)));

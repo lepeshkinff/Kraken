@@ -12,10 +12,12 @@ namespace Kraken
 		private Dictionary<string, FileConfiguration[]> fileConfigurations;
 
 		public MainForm(
+			string defaultPath,
 			string defaultEnvironment,
 			OctopusWorker octopusWorker)
 		{
 			InitializeComponent();
+			selectedPathLabel.Text = defaultPath;
 			this.octopusWorker = octopusWorker;
 			EnvironmentTb.Text = defaultEnvironment;
 		}
@@ -39,14 +41,31 @@ namespace Kraken
 
 		private void button1_Click(object sender, EventArgs e)
 		{
-			folderBrowserDialog.ShowDialog();
+			using (var fbd = new FolderBrowserDialog())
+			{
+				if (string.IsNullOrWhiteSpace(selectedPathLabel.Text))
+				{
+					fbd.SelectedPath = selectedPathLabel.Text;
+				}
+
+				var result = fbd.ShowDialog();
+				if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+				{
+					selectedPathLabel.Text = fbd.SelectedPath;
+				}
+			}
 		}
 
 		private async void button2_Click(object sender, EventArgs e)
 		{
 			try
 			{
-				var path = folderBrowserDialog.SelectedPath;
+				if(string.IsNullOrWhiteSpace(selectedPathLabel.Text))
+				{
+					MessageBox.Show("А шо ж вы папку солюшена, то не выбрали?");
+					return;
+				}
+
 				var environment = EnvironmentTb.Text;
 				if (string.IsNullOrWhiteSpace(environment))
 				{
@@ -64,7 +83,7 @@ namespace Kraken
 
 				var matchingCofigurtions = fileConfigurations[item];
 
-				await octopusWorker.ApplyConfigurations(folderBrowserDialog.SelectedPath, matchingCofigurtions, environment);
+				await octopusWorker.ApplyConfigurations(selectedPathLabel.Text, matchingCofigurtions, environment);
 				MessageBox.Show("Готово!");
 			}
 			catch (Exception ex)
