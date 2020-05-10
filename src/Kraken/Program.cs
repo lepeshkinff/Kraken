@@ -1,6 +1,7 @@
 ﻿using Kraken.Engine;
 using System;
 using System.Configuration;
+using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -14,13 +15,17 @@ namespace Kraken
 		[STAThread]
 		static void Main()
 		{
+			Application.EnableVisualStyles();
+			Application.SetCompatibleTextRenderingDefault(false);
+
 			if (!GetConfigValue("octopusEndpoint", out var octopusEndpoint) ||
 				!GetConfigValue("octopusApiKey", out var octopusApiKey))
 			{
 				return;
 			}
-			var configurationPath = ConfigurationManager.AppSettings["configurationPath"] ?? Assembly.GetExecutingAssembly().Location;
-			var environment = Environment.GetEnvironmentVariable("OctopusEnvironment") ?? ConfigurationManager.AppSettings["OctopusEnvironment"];
+			var configurationPath = ConfigurationManager.AppSettings["configurationPath"] ?? 
+				Path.Combine(Assembly.GetExecutingAssembly().Location, "configuration.json");
+			var environment = Environment.GetEnvironmentVariable("OctopusEnvironment") ?? ConfigurationManager.AppSettings["octopusEnvironment"];
 			var folder = ConfigurationManager.AppSettings["solutionsFoldeer"];
 
 			var form = new MainForm(
@@ -30,9 +35,6 @@ namespace Kraken
 					new ArtifactsProvider(octopusApiKey, octopusEndpoint)));
 
 			form.Init(new ConfigurationsProvider(configurationPath));
-
-			Application.EnableVisualStyles();
-			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(form);
 		}
 
