@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Kraken
@@ -65,10 +63,9 @@ namespace Kraken
 
 		private async void button2_Click(object sender, EventArgs e)
 		{
-			var cts = new CancellationTokenSource();
+			hideAllPanel.Visible = true;
 			try
 			{
-				Progress(cts.Token);
 				if (string.IsNullOrWhiteSpace(selectedPathLabel.Text))
 				{
 					MessageBox.Show("А шо ж вы папку солюшена, то не выбрали?");
@@ -100,27 +97,8 @@ namespace Kraken
 			}
 			finally
 			{
-				cts.Cancel();
+				hideAllPanel.Visible = false;
 			}
-		}
-
-		private async void Progress(CancellationToken cancellationToken)
-		{
-			hideAllPanel.Visible = true;
-
-			var i = 0;
-			while (!cancellationToken.IsCancellationRequested)
-			{
-				await Task.Delay(200);
-				progressBar.Value = i;
-				if (i == 100)
-				{
-					i = 0;
-				}
-				i++;
-			}
-
-			hideAllPanel.Visible = false;
 		}
 	}
 }

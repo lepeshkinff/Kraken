@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
 			this.button1 = new System.Windows.Forms.Button();
 			this.EnvironmentTb = new System.Windows.Forms.TextBox();
 			this.label1 = new System.Windows.Forms.Label();
@@ -38,8 +39,9 @@
 			this.label4 = new System.Windows.Forms.Label();
 			this.selectedPathLabel = new System.Windows.Forms.Label();
 			this.hideAllPanel = new System.Windows.Forms.Panel();
-			this.progressBar = new System.Windows.Forms.ProgressBar();
+			this.pictureBox1 = new System.Windows.Forms.PictureBox();
 			this.hideAllPanel.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// button1
@@ -122,19 +124,22 @@
 			// 
 			// hideAllPanel
 			// 
-			this.hideAllPanel.Controls.Add(this.progressBar);
+			this.hideAllPanel.Controls.Add(this.pictureBox1);
 			this.hideAllPanel.Location = new System.Drawing.Point(12, 12);
 			this.hideAllPanel.Name = "hideAllPanel";
 			this.hideAllPanel.Size = new System.Drawing.Size(393, 349);
 			this.hideAllPanel.TabIndex = 9;
 			this.hideAllPanel.Visible = false;
 			// 
-			// progressBar
+			// pictureBox1
 			// 
-			this.progressBar.Location = new System.Drawing.Point(35, 147);
-			this.progressBar.Name = "progressBar";
-			this.progressBar.Size = new System.Drawing.Size(321, 23);
-			this.progressBar.TabIndex = 0;
+			this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+			this.pictureBox1.InitialImage = null;
+			this.pictureBox1.Location = new System.Drawing.Point(3, 29);
+			this.pictureBox1.Name = "pictureBox1";
+			this.pictureBox1.Size = new System.Drawing.Size(387, 300);
+			this.pictureBox1.TabIndex = 0;
+			this.pictureBox1.TabStop = false;
 			// 
 			// MainForm
 			// 
@@ -158,6 +163,7 @@
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Выпустить Кракена!";
 			this.hideAllPanel.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -174,6 +180,6 @@
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.Label selectedPathLabel;
 		private System.Windows.Forms.Panel hideAllPanel;
-		private System.Windows.Forms.ProgressBar progressBar;
+		private System.Windows.Forms.PictureBox pictureBox1;
 	}
 }
