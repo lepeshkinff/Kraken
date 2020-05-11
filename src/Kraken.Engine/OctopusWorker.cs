@@ -64,27 +64,29 @@ namespace Kraken.Engine
         {
             foreach (var pair in vars)
             {
-                var match = Regex.Match(text, $"key=\"{pair.Key}\"[ ]*value=\"(.*)\"");
+                var match = Regex.Match(text, $"key=\"{pair.Key}\"[ ]*value=\"(.*)\"", RegexOptions.IgnoreCase);
                 if (match.Success)
                 {
                     ReplaceText(ref text, match, match.Groups[1].Value, pair.Value);
                     continue;
                 }
 
-                match = Regex.Match(text, $"name=\"{pair.Key}\"(.*)connectionString=\"(.*)\"");
+                match = Regex.Match(text, $"name=\"{pair.Key}\"(.*)connectionString=\"(.*)\"", RegexOptions.IgnoreCase);
                 if (match.Success)
                 {
                     ReplaceText(ref text, match, match.Groups[2].Value, pair.Value);
                     continue;
                 }
 
-                match = Regex.Match(text, $"\"{pair.Key}\"[ ]*:[ ]*((\\d+|true|false)|(\"(.*)\"))");
+                match = Regex.Match(text, $"\"{pair.Key}\"[ ]*:[ ]*((\\d+|true|false)|(\"(.*)\"))", RegexOptions.IgnoreCase);
                 if (match.Success)
                 {
                     var replace = string.IsNullOrEmpty(match.Groups[2].Value)
                         ? match.Groups[4].Value
                         : match.Groups[2].Value;
-                    var value = pair.Value;
+                    var value = pair.Value
+                        .Replace("\\", "\\\\")
+                        .Replace("\"", "\\\"");
                     ReplaceText(ref text, match, replace, value);
                     continue;
                 }
@@ -100,14 +102,14 @@ namespace Kraken.Engine
                 replace = "\"\"";
                 value = $"\"{value}\"";
             }
-            text = Regex.Replace(text, match.Value, match.Value.Replace(replace, value));
+            text = text.Replace(match.Value, match.Value.Replace(replace, value));
         }
 
         private static string ApplySubstitutions(string artifactText, Dictionary<string, string> substitutions)
         {
             foreach (var substitution in substitutions)
             {
-                artifactText = Regex.Replace(artifactText, substitution.Key, substitution.Value);
+                artifactText = Regex.Replace(artifactText, substitution.Key, substitution.Value, RegexOptions.IgnoreCase);
             }
 
             return artifactText;

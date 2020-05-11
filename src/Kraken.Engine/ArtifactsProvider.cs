@@ -55,13 +55,13 @@ namespace Kraken.Engine
             string environmentName,
             string projectName)
         {
-            var environment = await repository.Environments.FindOne(x => x.Name.Contains(environmentName));
+            var environment = await repository.Environments.FindOne(x => x.Name.Equals(environmentName, System.StringComparison.OrdinalIgnoreCase));
             if (environment == null)
             {
                 throw new ArtifactsProviderException($"Среда {environmentName} не найдена. Проверьте написание среды (case sensetive)");
             }
 
-            var project = await repository.Projects.FindOne(x => x.Name.Contains(projectName));
+            var project = await repository.Projects.FindOne(x => x.Name.Equals(projectName, System.StringComparison.OrdinalIgnoreCase));
             if (project == null)
             {
                 throw new ArtifactsProviderException($"Проект {projectName} не найден в октопусе. Проверьте конфигурацию");
@@ -95,13 +95,13 @@ namespace Kraken.Engine
                             var set = await repository.LibraryVariableSets.Get(x);
                             var vars = await repository.VariableSets.Get(set.VariableSetId);
 
-                            var environment = vars.ScopeValues.Environments.FirstOrDefault(e => e.Name == environmentName).Id;
-                            if (!string.IsNullOrWhiteSpace(environment))
+                            var environment = vars.ScopeValues.Environments.FirstOrDefault(e => e.Name.Equals(environmentName, System.StringComparison.OrdinalIgnoreCase));
+                            if (!string.IsNullOrWhiteSpace(environment?.Id))
                             {
                                 var envVars = vars.Variables
                                     .Where(vs =>
                                         (vs.Scope.TryGetValue(ScopeField.Environment, out var vs1) &&
-                                        vs1.Any(e => e == environment)));
+                                        vs1.Any(e => e == environment.Id)));
 
                                 foreach (var s in envVars)
                                 {
@@ -116,13 +116,24 @@ namespace Kraken.Engine
                                     sets.TryAdd(s.Name, s.Value);
                                 }
                             }
+
+                            sets.TryAdd("Octopus.Environment.Name", environment.Name);
                         }
                         catch { }
                     })
                 .ToArray());
 
-            for (var i = 0; i < 4; i++)
+            //дальше пара костылей
+            sets.TryAdd("if RunQG}#{Octopus.Action[Create TestPlan].Output.TestPlanId}#{else}0#{/if", "0");
+            sets.TryAdd("if Octopus.Action.Package.PackageId}#{Octopus.Action.Package.PackageId}#{else}#{Octopus.Step.Name}#{/if", "Local_App");
+            sets.TryAdd("Octopus.Project.Name", project.Name);
+            sets.TryAdd("Octopus.Action.Package.PackageId", "SomePackageId");
+            sets.TryAdd("if Octopus.Action.Package.PackageId}SomePackageId#{else}#{Octopus.Step.Name}#{/if", "Local_App");
+            //конец преднамеренных костылей
+
+            for (var i = 0; i < 10; i++)
             {
+                bool hasChanges = false;
                 foreach (var set in sets)
                 {
                     foreach (var sub in sets)
@@ -132,8 +143,18 @@ namespace Kraken.Engine
                             continue;
                         }
 
-                        sets[sub.Key] = sets[sub.Key]?.Replace($"#{{{set.Key}}}", set.Value);
+                        var replace = $"#{{{set.Key}}}";
+                        if (sets[sub.Key]?.Contains(replace) == true)
+                        {
+                            hasChanges = true;
+                            sets[sub.Key] = sets[sub.Key]?.Replace(replace, set.Value);
+                        }
                     }
+                }
+
+                if(!hasChanges)
+                {
+                    break;
                 }
             }
 
