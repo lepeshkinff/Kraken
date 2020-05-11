@@ -123,14 +123,6 @@ namespace Kraken.Engine
                     })
                 .ToArray());
 
-            //дальше пара костылей
-            sets.TryAdd("if RunQG}#{Octopus.Action[Create TestPlan].Output.TestPlanId}#{else}0#{/if", "0");
-            sets.TryAdd("if Octopus.Action.Package.PackageId}#{Octopus.Action.Package.PackageId}#{else}#{Octopus.Step.Name}#{/if", "Local_App");
-            sets.TryAdd("Octopus.Project.Name", project.Name);
-            sets.TryAdd("Octopus.Action.Package.PackageId", "SomePackageId");
-            sets.TryAdd("if Octopus.Action.Package.PackageId}SomePackageId#{else}#{Octopus.Step.Name}#{/if", "Local_App");
-            //конец преднамеренных костылей
-
             for (var i = 0; i < 10; i++)
             {
                 bool hasChanges = false;
