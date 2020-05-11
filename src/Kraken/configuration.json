@@ -6,6 +6,7 @@
 		"PathToFile": "Path/To/File/Local/appsettings.json",
 		"OctopusProject": "Some Octopus Project",
 		"OctopusArtifactName": "SomeArtifact.json",
+		"IsSubstitutionsOnly": false,
 		"Substitutions": {
 			"add key=\"SomeKey\" value=\".*\"": "add key=\"SomeKey\" value=\"/\""
 		}

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Kraken
@@ -61,7 +62,13 @@ namespace Kraken
 			}
 		}
 
-		private async void button2_Click(object sender, EventArgs e)
+		private async void button2_Click(object sender, EventArgs e) =>
+			await ApplyInternal(octopusWorker.ApplyConfigurations);
+
+		private async void button3_Click(object sender, EventArgs e) =>
+			await ApplyInternal(octopusWorker.ApplyVariables);
+
+		private async Task ApplyInternal(Func<string, FileConfiguration[], string, Task> applyAction)
 		{
 			hideAllPanel.Visible = true;
 			try
@@ -88,8 +95,12 @@ namespace Kraken
 				var item = configurationsList.SelectedItem as string;
 
 				var matchingCofigurtions = fileConfigurations[item];
-				await octopusWorker.ApplyConfigurations(selectedPathLabel.Text, matchingCofigurtions, environment);
-				MessageBox.Show("Готово!");
+				await applyAction(selectedPathLabel.Text, matchingCofigurtions, environment);
+				var result = MessageBox.Show($"Готово!{Environment.NewLine}Если надо ещё что-то поменять, нажминет Ok иначе -- Cancel", "Рэзультат", MessageBoxButtons.OKCancel);
+				if(result == DialogResult.Cancel)
+				{
+					Application.Exit();
+				}
 			}
 			catch (Exception ex)
 			{
