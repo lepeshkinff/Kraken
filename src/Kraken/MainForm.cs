@@ -18,7 +18,7 @@ namespace Kraken
 			OctopusWorker octopusWorker)
 		{
 			InitializeComponent();
-			selectedPathLabel.Text = defaultPath;
+			selectedPathTb.Text = defaultPath;
 			this.octopusWorker = octopusWorker;
 			EnvironmentTb.Text = defaultEnvironment;
 		}
@@ -48,16 +48,16 @@ namespace Kraken
 				Description = "Укажите папку солюшена, файлы коныигураций которого надо подменить",
 			})
 			{
-				if (!string.IsNullOrWhiteSpace(selectedPathLabel.Text))
+				if (!string.IsNullOrWhiteSpace(selectedPathTb.Text))
 				{
-					fbd.SelectedPath = selectedPathLabel.Text;
+					fbd.SelectedPath = selectedPathTb.Text;
 					SendKeys.Send("{TAB}{TAB}{RIGHT}");
 				}
 
 				var result = fbd.ShowDialog();
 				if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
 				{
-					selectedPathLabel.Text = fbd.SelectedPath;
+					selectedPathTb.Text = fbd.SelectedPath;
 				}
 			}
 		}
@@ -73,7 +73,7 @@ namespace Kraken
 			hideAllPanel.Visible = true;
 			try
 			{
-				if (string.IsNullOrWhiteSpace(selectedPathLabel.Text))
+				if (string.IsNullOrWhiteSpace(selectedPathTb.Text))
 				{
 					MessageBox.Show("А шо ж вы папку солюшена, то не выбрали?");
 					return;
@@ -95,7 +95,7 @@ namespace Kraken
 				var item = configurationsList.SelectedItem as string;
 
 				var matchingCofigurtions = fileConfigurations[item];
-				await applyAction(selectedPathLabel.Text, matchingCofigurtions, environment);
+				await applyAction(selectedPathTb.Text, matchingCofigurtions, environment);
 				var result = MessageBox.Show($"Готово!{Environment.NewLine}Если надо ещё что-то поменять, нажминет Ok иначе -- Cancel", "Рэзультат", MessageBoxButtons.OKCancel);
 				if(result == DialogResult.Cancel)
 				{
