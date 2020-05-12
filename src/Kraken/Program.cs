@@ -31,7 +31,7 @@ namespace Kraken
 			}
 			catch (Exception e)
 			{
-				MessageBox.Show($"Ошибка при запуске приложения {e}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MessageBox.Show($"Ошибка при запуске приложения {Environment.NewLine} {string.Join(Environment.NewLine, args)} {Environment.NewLine} {e}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			}
 		}
