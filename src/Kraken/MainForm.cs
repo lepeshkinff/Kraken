@@ -104,7 +104,7 @@ namespace Kraken
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show($"чёт не вышло {ex}");
+				MessageBox.Show($"чёт не вышло {ex}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 			finally
 			{

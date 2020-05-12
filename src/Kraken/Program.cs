@@ -33,8 +33,15 @@ namespace Kraken
 				environment,
 				new OctopusWorker(
 					new ArtifactsProvider(octopusApiKey, octopusEndpoint)));
-
-			form.Init(new ConfigurationsProvider(configurationPath));
+			try
+			{
+				form.Init(new ConfigurationsProvider(configurationPath));
+			}
+			catch (Exception e)
+			{
+				MessageBox.Show($"Ошибка при запуске приложения {e}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
+			
 			Application.Run(form);
 		}
 
@@ -44,7 +51,7 @@ namespace Kraken
 
 			if (string.IsNullOrEmpty(value))
 			{
-				MessageBox.Show($"Таки не хватает важной настнойки {name}");
+				MessageBox.Show($"Таки не хватает важной настнойки {name}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return false;
 			}
 
