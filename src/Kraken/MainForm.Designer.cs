@@ -156,8 +156,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(417, 373);
-            this.Controls.Add(this.selectedPathTb);
             this.Controls.Add(this.hideAllPanel);
+            this.Controls.Add(this.selectedPathTb);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.configurationsList);
             this.Controls.Add(this.label3);
