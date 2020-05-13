@@ -1,0 +1,7 @@
+{
+	"SolutionFolder": "1",
+	"OctopusEndpoint": "2",
+	"OctopusApiKey": "3",
+	"ConfigurationPath": [ "4" ],
+	"Environment": "5"
+}

@@ -2,6 +2,7 @@
 using System;
 using System.Configuration;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace Kraken.Configuration
@@ -16,7 +17,7 @@ namespace Kraken.Configuration
             {
                 config = JsonConvert.DeserializeObject<Config>(startingArgs[0]);
             }
-            else if(startingArgs?.Length != 0)
+            else if(startingArgs?.Length > 1)
             {
                 config = LoadArgs(startingArgs);
             }
@@ -44,11 +45,13 @@ namespace Kraken.Configuration
                 }
             }
 
-            if (string.IsNullOrWhiteSpace(config.ConfigurationPath))
+            if (config.ConfigurationPath?.Any() != true)
             {
-                config.ConfigurationPath = ConfigurationManager.AppSettings[nameof(config.ConfigurationPath)] ??
+               var str = ConfigurationManager.AppSettings[nameof(config.ConfigurationPath)] ??
                     Environment.GetEnvironmentVariable(nameof(config.ConfigurationPath)) ??
                     Path.Combine(Assembly.GetExecutingAssembly().Location, "configuration.json");
+
+               config.ConfigurationPath = str.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
             }
 
             if (string.IsNullOrWhiteSpace(config.Environment))
@@ -97,8 +100,8 @@ namespace Kraken.Configuration
                     case "-CONFIGURATIONPATH":
                     case "-C":
                         i++;
-                        config.ConfigurationPath = startingArgs[i];
-                        break;
+                        config.ConfigurationPath = startingArgs[i].Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                  break;
                 }
             }
 
