@@ -72,35 +72,34 @@ namespace Kraken.Configuration
         private static Config LoadArgs(string[] startingArgs)
         {
             Config config = new Config();
+            Action<string> setField = null;
             for (var i = 0; i < startingArgs.Length; i++)
             {
                 switch (startingArgs[i].ToUpperInvariant())
                 {
                     case "-ENVIRONMENT":
                     case "-E":
-                        i++;
-                        config.Environment = startingArgs[i];
+                        setField = value => config.Environment = value;
                         break;
                     case "-SOLUTIONFOLDER":
                     case "-S":
-                        i++;
-                        config.SolutionFolder = startingArgs[i]
-                            .Replace("\"", ""); //студия, будь она не ладна, сюда пихает кавычки (((
+                        setField = value => config.SolutionFolder = value?.Replace("\"", ""); //студия, будь она не ладна, сюда пихает кавычки (((
                         break;
                     case "-OCTOPUSENDPOINT":
                     case "-OE":
-                        i++;
-                        config.OctopusEndpoint = startingArgs[i];
+                        setField = value => config.OctopusEndpoint = value;
                         break;
                     case "-OCTOPUSAPIKEY":
                     case "-OK":
-                        i++;
-                        config.OctopusApiKey = startingArgs[i];
+                        setField = value => config.OctopusApiKey = value;
                         break;
                     case "-CONFIGURATIONPATH":
                     case "-C":
-                        i++;
-                        config.ConfigurationPath = startingArgs[i].Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                        setField = value => config.ConfigurationPath = value?.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                        break;
+                    default:
+                        setField?.Invoke(startingArgs[i]);
+                        setField = null;
                   break;
                 }
             }
