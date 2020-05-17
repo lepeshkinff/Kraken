@@ -23,9 +23,9 @@ namespace Kraken
 			EnvironmentTb.Text = defaultEnvironment;
 		}
 
-		public void Init(ConfigurationsProvider configurationsProvider)
+		public async Task Init(ConfigurationsProvider configurationsProvider)
 		{
-			var items = configurationsProvider.GetConfigurations();
+			var items = await configurationsProvider.GetConfigurations();
 
 			fileConfigurations = items
 				.GroupBy(x => x.ComponentName)
