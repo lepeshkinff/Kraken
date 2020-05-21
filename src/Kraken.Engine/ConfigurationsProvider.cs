@@ -9,7 +9,9 @@ namespace Kraken.Engine
 {
 	public class ConfigurationsProvider
 	{
-		private string[] configurationPath;
+		//Версия файлов, с котрыми умеет работать тул. Увеличить при breaking changes
+		public const int currentToolVersion = 1;
+		private readonly string[] configurationPath;
 		private readonly IHttpClient httpClient;
 
 		public ConfigurationsProvider(string[] configurationPath, IHttpClient httpClient)
@@ -42,15 +44,16 @@ namespace Kraken.Engine
 			try
 			{
 				var json = await httpClient.GetStringAsync(uri);
-				list.AddRange(JsonConvert.DeserializeObject<List<FileConfiguration>>(json));
+				list.AddRange(LoadConfigurationsFromFile(json));
 			}
-			catch { }
+			catch (VersionMismatchException) { throw; }
+			catch {}
 		}
 
 		private static void LoadFile(List<FileConfiguration> list, string path)
 		{
 			var fileName = Path.GetFileName(path);
-			var dir = path.Replace(fileName, "");
+			var dir =  path.Replace(fileName, "");
 
 			if (string.IsNullOrWhiteSpace(dir) || !Path.IsPathRooted(dir))
 			{
@@ -62,10 +65,25 @@ namespace Kraken.Engine
 			{
 				try
 				{
-					list.AddRange(JsonConvert.DeserializeObject<List<FileConfiguration>>(File.ReadAllText(file)));
+					list.AddRange(LoadConfigurationsFromFile(File.ReadAllText(file)));
 				}
-				catch { }
+				catch (VersionMismatchException) { throw; }
+				catch {}
 			}
 		}
+
+		private static List<FileConfiguration> LoadConfigurationsFromFile(string jsonSting)
+		{
+			var fileWithVersion = JsonConvert.DeserializeObject<FileWithVersion>(jsonSting);
+			if (fileWithVersion.Version.Value > currentToolVersion)
+			{
+				//TODO: вообще хорошо бы не валить все конфиги из-за одного. а еще сообщать другие проблемы с загрузкой конфигов.
+				throw new VersionMismatchException(fileWithVersion.Version.Value, currentToolVersion);
+			}
+
+			var krakenFile = JsonConvert.DeserializeObject<KrakenFile>(jsonSting);
+			return krakenFile.Configurations;
+		}
+		
 	}
 }

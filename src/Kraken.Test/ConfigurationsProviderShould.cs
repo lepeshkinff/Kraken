@@ -18,18 +18,21 @@ namespace Kraken.Test
 			var httpClient = new Mock<IHttpClient>();
 			httpClient.Setup(x => x.GetStringAsync(It.IsAny<Uri>()))
 				.ReturnsAsync(
-					@"
-					[
-						{
-							""Id"": ""8682B238-65D8-43E7-98E2-E24BB739E195"",
-							""ComponentName"": ""OctopusComponentName"",
-							""PathToFile"": ""Path/To/File/Local/appsettings.json"",
-							""OctopusProject"": ""Some Octopus Project"",
-							""OctopusArtifactName"": ""SomeArtifact.json"",
-							""IsSubstitutionsOnly"": false,
-							""Substitutions"": {}
-						}
-					]");
+					@"{
+						""Version"": 1,
+						""Configurations"" : 
+						[
+							{
+								""Id"": ""8682B238-65D8-43E7-98E2-E24BB739E195"",
+								""ComponentName"": ""OctopusComponentName"",
+								""PathToFile"": ""Path/To/File/Local/appsettings.json"",
+								""OctopusProject"": ""Some Octopus Project"",
+								""OctopusArtifactName"": ""SomeArtifact.json"",
+								""IsSubstitutionsOnly"": false,
+								""Substitutions"": {}
+							}
+						]
+					}");
 
 			var provider = new ConfigurationsProvider(
 				new[]
@@ -102,5 +105,31 @@ namespace Kraken.Test
 			configs.Should().NotBeEmpty();
 			configs.Should().HaveCount(2);
 		}
+		
+		[Theory]
+		[InlineData("[]")] //backward compatible content
+		[InlineData("AI will do the trick")] //backward compatibility broken
+		public void FailToLoadUriWithHigherVersion(string configurations)
+		{
+			var httpClient = new Mock<IHttpClient>();
+			httpClient.Setup(x => x.GetStringAsync(It.IsAny<Uri>()))
+				.ReturnsAsync(
+					@$"{{
+						""Version"": 2,
+						""Configurations"" : ""{configurations}""
+					}}");
+
+			var provider = new ConfigurationsProvider(
+				new[]
+				{
+					"http://some.url.com",
+				},
+				httpClient.Object);
+
+			Func<Task> getConfigs = async () =>  await provider.GetConfigurations();
+
+			getConfigs.Should().Throw<VersionMismatchException>();
+		}
+
 	}
 }

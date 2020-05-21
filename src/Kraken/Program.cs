@@ -34,6 +34,15 @@ namespace Kraken
 
 				Application.Run(form);
 			}
+			catch (VersionMismatchException e)
+			{
+				MessageBox.Show(
+					e.Message,
+					"Обновите Kraken",
+					MessageBoxButtons.OK,
+					MessageBoxIcon.Information);
+				return;
+			}
 			catch (Exception e)
 			{
 				MessageBox.Show($"Ошибка при запуске приложения {Environment.NewLine} {string.Join(Environment.NewLine, args)} {Environment.NewLine} {e}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);

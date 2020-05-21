@@ -1,24 +1,28 @@
-[
-	{
-		"Id": "8682B238-65D8-43E7-98E2-E24BB739E195",
-		"ComponentName": "OctopusComponentName",
-		"PathToFile": "Path/To/File/Local/appsettings.json",
-		"OctopusProject": "Some Octopus Project",
-		"OctopusArtifactName": "SomeArtifact.json",
-		"IsSubstitutionsOnly": false,
-		"Substitutions": {
-			"add key=\"SomeKey\" value=\".*\"": "add key=\"SomeKey\" value=\"/\""
+{
+	"Version": 1,
+	"Configurations" : 
+	[
+		{
+			"Id": "8682B238-65D8-43E7-98E2-E24BB739E195",
+			"ComponentName": "OctopusComponentName",
+			"PathToFile": "Path/To/File/Local/appsettings.json",
+			"OctopusProject": "Some Octopus Project",
+			"OctopusArtifactName": "SomeArtifact.json",
+			"IsSubstitutionsOnly": false,
+			"Substitutions": {
+				"add key=\"SomeKey\" value=\".*\"": "add key=\"SomeKey\" value=\"/\""
+			}
+		},
+		{
+			"Id": "8682B238-65D8-43E7-98E2-E24BB739E199",
+			"ComponentName": "OctopusComponentName",
+			"PathToFile": "Path/To/File/Local/appsettings.json",
+			"OctopusProject": "Some Octopus Project",
+			"OctopusArtifactName": "SomeArtifact.json",
+			"IsSubstitutionsOnly": false,
+			"Substitutions": {
+				"add key=\"SomeKey\" value=\".*\"": "add key=\"SomeKey\" value=\"/\""
+			}
 		}
-	},
-	{
-		"Id": "8682B238-65D8-43E7-98E2-E24BB739E199",
-		"ComponentName": "OctopusComponentName",
-		"PathToFile": "Path/To/File/Local/appsettings.json",
-		"OctopusProject": "Some Octopus Project",
-		"OctopusArtifactName": "SomeArtifact.json",
-		"IsSubstitutionsOnly": false,
-		"Substitutions": {
-			"add key=\"SomeKey\" value=\".*\"": "add key=\"SomeKey\" value=\"/\""
-		}
-	}
-]
+	]
+}
