@@ -25,9 +25,22 @@ namespace Kraken
 
 		public async Task Init(ConfigurationsProvider configurationsProvider)
 		{
-			var items = await configurationsProvider.GetConfigurations();
+			var configurationsLoadResult = await configurationsProvider.GetConfigurations();
 
-			fileConfigurations = items
+			if (configurationsLoadResult.Errors.Any())
+			{
+				var errors = string.Join(Environment.NewLine, configurationsLoadResult.Errors.Distinct());
+				MessageBox.Show(
+					$"При загрузке конфигураций возникли следующие ошибки: {Environment.NewLine}" +
+					$"{Environment.NewLine}{errors}{Environment.NewLine}" +
+					$"{Environment.NewLine}Часть конфигураций может быть недоступна",
+					"Ошибки при загрузке",
+					MessageBoxButtons.OK,
+					MessageBoxIcon.Information);
+			}
+			
+			fileConfigurations = configurationsLoadResult
+				.Configurations
 				.GroupBy(x => x.ComponentName)
 				.ToDictionary(x => x.Key, v => v.ToArray());
 
@@ -37,7 +50,7 @@ namespace Kraken
 			{
 				configurationsList.Items.Add(item);
 			}
-			fileConfigurations["All"] = items.ToArray();
+			fileConfigurations["All"] = configurationsLoadResult.Configurations.ToArray();
 		}
 
 		private void button1_Click(object sender, EventArgs e)

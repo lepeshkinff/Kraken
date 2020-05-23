@@ -10,7 +10,8 @@ namespace Kraken.Engine
 	public class ConfigurationsProvider
 	{
 		//Версия файлов, с котрыми умеет работать тул. Увеличить при breaking changes
-		public const int currentToolVersion = 1;
+		private const int currentToolVersion = 1;
+		
 		private readonly string[] configurationPath;
 		private readonly IHttpClient httpClient;
 
@@ -20,37 +21,41 @@ namespace Kraken.Engine
 			this.httpClient = httpClient;
 		}
 
-		public async Task<IReadOnlyCollection<FileConfiguration>> GetConfigurations()
+		public async Task<ConfigurationsLoadResult> GetConfigurations()
 		{
 			var list = new List<FileConfiguration>();
+			var errors = new List<string>();
 			foreach(var path in configurationPath)
 			{
 				if(!Uri.TryCreate(path, UriKind.Absolute, out var uriResult) ||
 					(!Uri.UriSchemeHttp.Equals(uriResult?.Scheme, StringComparison.OrdinalIgnoreCase)
 					&& !Uri.UriSchemeHttps.Equals(uriResult?.Scheme, StringComparison.OrdinalIgnoreCase)))
 				{
-					LoadFile(list, path);
+					LoadFile(list, errors, path);
 				}
 				else
 				{
-					await LoadFileUri(list, uriResult);
+					await LoadFileUri(list, errors, uriResult);
 				}
 			}
-			return list;
+			return new ConfigurationsLoadResult(list, errors);
 		}
 
-		private async Task LoadFileUri(List<FileConfiguration> list, Uri uri)
+		private async Task LoadFileUri(List<FileConfiguration> list, List<string> errors, Uri uri)
 		{
 			try
 			{
 				var json = await httpClient.GetStringAsync(uri);
 				list.AddRange(LoadConfigurationsFromFile(json));
 			}
-			catch (VersionMismatchException) { throw; }
+			catch (VersionMismatchException e)
+			{
+				errors.Add(e.Message);
+			}
 			catch {}
 		}
 
-		private static void LoadFile(List<FileConfiguration> list, string path)
+		private static void LoadFile(List<FileConfiguration> list, List<string> errors, string path)
 		{
 			var fileName = Path.GetFileName(path);
 			var dir =  path.Replace(fileName, "");
@@ -67,7 +72,10 @@ namespace Kraken.Engine
 				{
 					list.AddRange(LoadConfigurationsFromFile(File.ReadAllText(file)));
 				}
-				catch (VersionMismatchException) { throw; }
+				catch (VersionMismatchException e)
+				{
+					errors.Add(e.Message);
+				}
 				catch {}
 			}
 		}

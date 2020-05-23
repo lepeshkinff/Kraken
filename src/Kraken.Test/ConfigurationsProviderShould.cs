@@ -44,9 +44,9 @@ namespace Kraken.Test
 			var configs = await provider.GetConfigurations();
 
 			configs.Should().NotBeNull();
-			configs.Should().NotBeEmpty();
-			configs.Should().HaveCount(1);
-			configs.First().Id.Should().Be(Guid.Parse("8682B238-65D8-43E7-98E2-E24BB739E195"));
+			configs.Configurations.Should().NotBeNullOrEmpty();
+			configs.Configurations.Should().HaveCount(1);
+			configs.Configurations.First().Id.Should().Be(Guid.Parse("8682B238-65D8-43E7-98E2-E24BB739E195"));
 		}
 
 		[Fact]
@@ -61,10 +61,10 @@ namespace Kraken.Test
 				httpClient.Object);
 
 			var configs = await provider.GetConfigurations();
-
+			
 			configs.Should().NotBeNull();
-			configs.Should().NotBeEmpty();
-			configs.Should().HaveCount(4);
+			configs.Configurations.Should().NotBeNullOrEmpty();
+			configs.Configurations.Should().HaveCount(4);
 		}
 
 		[Fact]
@@ -84,8 +84,8 @@ namespace Kraken.Test
 			var configs = await provider.GetConfigurations();
 
 			configs.Should().NotBeNull();
-			configs.Should().NotBeEmpty();
-			configs.Should().HaveCount(2);
+			configs.Configurations.Should().NotBeNullOrEmpty();
+			configs.Configurations.Should().HaveCount(2);
 		}
 
 		[Fact]
@@ -102,14 +102,14 @@ namespace Kraken.Test
 			var configs = await provider.GetConfigurations();
 
 			configs.Should().NotBeNull();
-			configs.Should().NotBeEmpty();
-			configs.Should().HaveCount(2);
+			configs.Configurations.Should().NotBeNullOrEmpty();
+			configs.Configurations.Should().HaveCount(2);
 		}
 		
 		[Theory]
 		[InlineData("[]")] //backward compatible content
 		[InlineData("AI will do the trick")] //backward compatibility broken
-		public void FailToLoadUriWithHigherVersion(string configurations)
+		public async Task FailToLoadUriWithHigherVersion(string configurations)
 		{
 			var httpClient = new Mock<IHttpClient>();
 			httpClient.Setup(x => x.GetStringAsync(It.IsAny<Uri>()))
@@ -126,9 +126,10 @@ namespace Kraken.Test
 				},
 				httpClient.Object);
 
-			Func<Task> getConfigs = async () =>  await provider.GetConfigurations();
-
-			getConfigs.Should().Throw<VersionMismatchException>();
+			var configs = await provider.GetConfigurations();
+			configs.Should().NotBeNull();
+			configs.Errors.Should().HaveCount(1);
+			configs.Errors.Single().Should().StartWith("Ваш Kraken не дорос");
 		}
 
 	}
