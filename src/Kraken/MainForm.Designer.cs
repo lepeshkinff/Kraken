@@ -30,7 +30,7 @@
 		{
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.button1 = new System.Windows.Forms.Button();
-            this.EnvironmentTb = new System.Windows.Forms.TextBox();
+            this.EnvironmentCmb = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
@@ -55,12 +55,12 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // EnvironmentTb
+            // EnvironmentCmb
             // 
-            this.EnvironmentTb.Location = new System.Drawing.Point(67, 143);
-            this.EnvironmentTb.Name = "EnvironmentTb";
-            this.EnvironmentTb.Size = new System.Drawing.Size(325, 20);
-            this.EnvironmentTb.TabIndex = 1;
+            this.EnvironmentCmb.Location = new System.Drawing.Point(67, 143);
+            this.EnvironmentCmb.Name = "EnvironmentCmb";
+            this.EnvironmentCmb.Size = new System.Drawing.Size(325, 21);
+            this.EnvironmentCmb.TabIndex = 1;
             // 
             // label1
             // 
@@ -164,7 +164,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.EnvironmentTb);
+            this.Controls.Add(this.EnvironmentCmb);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.button3);
             this.MaximizeBox = false;
@@ -173,6 +173,7 @@
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Выпустить Кракена!";
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.hideAllPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
@@ -182,7 +183,7 @@
 
 		#endregion
 		private System.Windows.Forms.Button button1;
-		private System.Windows.Forms.TextBox EnvironmentTb;
+		private System.Windows.Forms.ComboBox EnvironmentCmb;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Button button2;
 		private System.Windows.Forms.Label label2;
