@@ -84,7 +84,7 @@ namespace Kraken.Engine
                     var replace = string.IsNullOrEmpty(match.Groups[2].Value)
                         ? match.Groups[4].Value
                         : match.Groups[2].Value;
-                    var value = pair.Value
+                    var value = pair.Value?
                         .Replace("\\", "\\\\")
                         .Replace("\"", "\\\"");
                     ReplaceText(ref text, match, replace, value);
