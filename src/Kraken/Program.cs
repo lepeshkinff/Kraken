@@ -13,7 +13,7 @@ namespace Kraken
 		/// The main entry point for the application.
 		/// </summary>
 		[STAThread]
-		static async Task Main(string[] args)
+		static void Main(string[] args)
 		{
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
@@ -21,16 +21,16 @@ namespace Kraken
 			try
 			{
 				var config = ConfigurationLoader.Load(args);
+				var configurationsProvider = new ConfigurationsProvider(
+					config.ConfigurationPath,
+					new HttpClientInternal(new HttpClient()));
 
 				var form = new MainForm(
 					config.SolutionFolder,
 					config.Environment,
-					new OctopusWorker(new ArtifactsProvider(config.OctopusApiKey, config.OctopusEndpoint)));
-
-				await form.Init(
-					new ConfigurationsProvider(
-						config.ConfigurationPath,
-						new HttpClientInternal(new HttpClient())));
+					configurationsProvider,
+					new OctopusWorker(new ArtifactsProvider(config.OctopusApiKey, config.OctopusEndpoint)),
+					new EnvironmentsProvider(config.OctopusApiKey, config.OctopusEndpoint));
 
 				Application.Run(form);
 			}

@@ -9,21 +9,31 @@ namespace Kraken
 {
 	public partial class MainForm : Form
 	{
+		private readonly string defaultEnvironment;
+		private readonly ConfigurationsProvider configurationsProvider;
 		private readonly OctopusWorker octopusWorker;
+		private readonly EnvironmentsProvider environmentsProvider;
 		private Dictionary<string, FileConfiguration[]> fileConfigurations;
 
 		public MainForm(
 			string defaultPath,
 			string defaultEnvironment,
-			OctopusWorker octopusWorker)
+			ConfigurationsProvider configurationsProvider,
+			OctopusWorker octopusWorker,
+			EnvironmentsProvider environmentsProvider)
 		{
 			InitializeComponent();
 			selectedPathTb.Text = defaultPath;
+			this.defaultEnvironment = string.IsNullOrWhiteSpace(defaultEnvironment) 
+                ? Properties.Settings.Default.LastEnvironment ?? ""
+                : defaultEnvironment;
+
+			this.configurationsProvider = configurationsProvider;
 			this.octopusWorker = octopusWorker;
-			EnvironmentTb.Text = defaultEnvironment;
+			this.environmentsProvider = environmentsProvider;
 		}
 
-		public async Task Init(ConfigurationsProvider configurationsProvider)
+		private async Task InitConfigurationsList()
 		{
 			var configurationsLoadResult = await configurationsProvider.GetConfigurations();
 
@@ -38,7 +48,7 @@ namespace Kraken
 					MessageBoxButtons.OK,
 					MessageBoxIcon.Information);
 			}
-			
+
 			fileConfigurations = configurationsLoadResult
 				.Configurations
 				.GroupBy(x => x.ComponentName)
@@ -50,8 +60,19 @@ namespace Kraken
 			{
 				configurationsList.Items.Add(item);
 			}
+
 			fileConfigurations["All"] = configurationsLoadResult.Configurations.ToArray();
 		}
+
+		private async Task InitEnvironmentsList()
+		{
+			var environments = await Task.Run(async () => await environmentsProvider.GetEnvironments());
+			EnvironmentCmb.Items.AddRange(environments);
+			if (EnvironmentCmb.Items.Contains(defaultEnvironment))
+			{
+				EnvironmentCmb.SelectedItem = defaultEnvironment;
+			}
+        }
 
 		private void button1_Click(object sender, EventArgs e)
 		{
@@ -84,6 +105,8 @@ namespace Kraken
 		private async Task ApplyInternal(Func<string, FileConfiguration[], string, Task> applyAction)
 		{
 			hideAllPanel.Visible = true;
+            UpdateLastSelectedEnvironment(EnvironmentCmb.Text);
+
 			try
 			{
 				if (string.IsNullOrWhiteSpace(selectedPathTb.Text))
@@ -92,7 +115,7 @@ namespace Kraken
 					return;
 				}
 
-				var environment = EnvironmentTb.Text;
+				var environment = EnvironmentCmb.Text;
 				if (string.IsNullOrWhiteSpace(environment))
 				{
 					MessageBox.Show("В аргументах отсутствует имя среды, для которой нужно получить" +
@@ -124,5 +147,22 @@ namespace Kraken
 				hideAllPanel.Visible = false;
 			}
 		}
-	}
+
+        private void UpdateLastSelectedEnvironment(string environment)
+        {
+            if (Properties.Settings.Default.LastEnvironment != environment)
+            {
+                Properties.Settings.Default.LastEnvironment = environment;
+                Properties.Settings.Default.Save();
+            }
+        }
+
+		private async void MainForm_Load(object sender, EventArgs e)
+        {
+            hideAllPanel.Visible = true;
+			await InitConfigurationsList();
+			await InitEnvironmentsList();
+            hideAllPanel.Visible = false;
+		}
+    }
 }
