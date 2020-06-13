@@ -54,14 +54,17 @@ namespace Kraken
 				.GroupBy(x => x.ComponentName)
 				.ToDictionary(x => x.Key, v => v.ToArray());
 
-			configurationsList.Items.Add("All");
-			configurationsList.SelectedIndex = 0;
-			foreach (var item in fileConfigurations.Keys)
+            var rootNode = configurationTree.Nodes.Add("All");
+			foreach (var itemGroup in fileConfigurations)
 			{
-				configurationsList.Items.Add(item);
+                var componentNode = rootNode.Nodes.Add(itemGroup.Key);
+                foreach (var item in itemGroup.Value)
+                {
+	                var leaf = componentNode.Nodes.Add(item.PathToFile);
+	                leaf.Tag = item;
+                }
 			}
-
-			fileConfigurations["All"] = configurationsLoadResult.Configurations.ToArray();
+			rootNode.Expand();
 		}
 
 		private async Task InitEnvironmentsList()
@@ -123,20 +126,16 @@ namespace Kraken
 					return;
 				}
 
-				if (configurationsList.SelectedIndex < 0)
-				{
-					MessageBox.Show("Э! выбрать конфиг надобно");
-					return;
-				}
-				var item = configurationsList.SelectedItem as string;
-
-				var matchingCofigurtions = fileConfigurations[item];
-				await applyAction(selectedPathTb.Text, matchingCofigurtions, environment);
-				var result = MessageBox.Show($"Готово!{Environment.NewLine}Если надо ещё что-то поменять, нажминет Ok иначе -- Cancel", "Рэзультат", MessageBoxButtons.OKCancel);
-				if(result == DialogResult.Cancel)
-				{
-					Application.Exit();
-				}
+				var matchingCofigurtions = GetSelectedConfigurations(configurationTree.Nodes[0]).ToArray();
+                if (!matchingCofigurtions.Any())
+                {
+	                MessageBox.Show("Э! выбрать конфиг надобно");
+	                return;
+                }
+                
+				await applyAction(selectedPathTb.Text, matchingCofigurtions , environment);
+				MessageBox.Show($"Готово!", "Рэзультат", MessageBoxButtons.OK, MessageBoxIcon.Information);
+				Application.Exit();
 			}
 			catch (Exception ex)
 			{
@@ -145,6 +144,25 @@ namespace Kraken
 			finally
 			{
 				hideAllPanel.Visible = false;
+			}
+		}
+
+		private IEnumerable<FileConfiguration> GetSelectedConfigurations(TreeNode rootNode)
+		{
+			foreach (TreeNode node in rootNode.Nodes)
+			{
+				if (node.Checked)
+				{
+					if (node.Tag != null)
+					{
+						yield return (FileConfiguration) node.Tag;
+					}
+				}
+				
+				foreach (var childConfiguration in GetSelectedConfigurations(node))
+				{
+					yield return childConfiguration;
+				}
 			}
 		}
 
@@ -163,6 +181,25 @@ namespace Kraken
 			await InitConfigurationsList();
 			await InitEnvironmentsList();
             hideAllPanel.Visible = false;
+		}
+
+		private void configurationTree_AfterCheck(object sender, TreeViewEventArgs e)
+        {
+	        if (e.Action == TreeViewAction.Unknown)
+	        {
+		        //это сделала сама программа в рекурсивном методе ниже. Игнорируем.
+		        return;
+	        }
+	        SeCheckedRecursively(e.Node, e.Node.Checked);
+        }
+
+        private void SeCheckedRecursively(TreeNode node, bool shouldBeChecked)
+        {
+            node.Checked = shouldBeChecked;
+			foreach (TreeNode childNode in node.Nodes)
+            {
+                SeCheckedRecursively(childNode, shouldBeChecked);
+            }
 		}
     }
 }
