@@ -101,16 +101,16 @@
 			// 
 			// label4
 			// 
-			this.label4.Location = new System.Drawing.Point(26, 185);
+			this.label4.Location = new System.Drawing.Point(26, 171);
 			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(366, 42);
+			this.label4.Size = new System.Drawing.Size(366, 27);
 			this.label4.TabIndex = 7;
 			this.label4.Text = "Есть следующие наборы настроек для получения конфигурационных файлов:";
 			// 
 			// hideAllPanel
 			// 
 			this.hideAllPanel.Controls.Add(this.pictureBox1);
-			this.hideAllPanel.Location = new System.Drawing.Point(-2, 1);
+			this.hideAllPanel.Location = new System.Drawing.Point(-2, 0);
 			this.hideAllPanel.Name = "hideAllPanel";
 			this.hideAllPanel.Size = new System.Drawing.Size(435, 727);
 			this.hideAllPanel.TabIndex = 9;
@@ -146,9 +146,9 @@
 			// configurationTree
 			// 
 			this.configurationTree.CheckBoxes = true;
-			this.configurationTree.Location = new System.Drawing.Point(25, 221);
+			this.configurationTree.Location = new System.Drawing.Point(25, 201);
 			this.configurationTree.Name = "configurationTree";
-			this.configurationTree.Size = new System.Drawing.Size(366, 464);
+			this.configurationTree.Size = new System.Drawing.Size(366, 480);
 			this.configurationTree.TabIndex = 12;
 			this.configurationTree.TabStop = false;
 			this.configurationTree.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.configurationTree_AfterCheck);
