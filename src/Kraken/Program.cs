@@ -1,6 +1,7 @@
 ﻿using Kraken.Configuration;
 using Kraken.Engine;
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -13,17 +14,27 @@ namespace Kraken
 		/// The main entry point for the application.
 		/// </summary>
 		[STAThread]
-		static void Main(string[] args)
+		static async Task Main(string[] args)
 		{
-			Application.EnableVisualStyles();
-			Application.SetCompatibleTextRenderingDefault(false);
-
 			try
 			{
 				var config = ConfigurationLoader.Load(args);
 				var configurationsProvider = new ConfigurationsProvider(
 					config.ConfigurationPath,
 					new HttpClientInternal(new HttpClient()));
+
+				if (args?.Any(x => "-cmd".Equals(x, StringComparison.OrdinalIgnoreCase)) == true)
+				{
+					var console = new ConsoleWorker(
+						configurationsProvider, 
+						new OctopusWorker(new ArtifactsProvider(config.OctopusApiKey, config.OctopusEndpoint)),
+						new EnvironmentsProvider(config.OctopusApiKey, config.OctopusEndpoint));
+					await console.Run(args, config.Environment, config.SolutionFolder, config.SelectedComponents);
+					return;
+				}
+
+				Application.EnableVisualStyles();
+				Application.SetCompatibleTextRenderingDefault(false);
 
 				var form = new MainForm(
 					config.SolutionFolder,

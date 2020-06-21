@@ -97,6 +97,16 @@ namespace Kraken.Configuration
                     case "-C":
                         setField = value => config.ConfigurationPath = value?.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                         break;
+                    case "-COMPONENTNAME":
+                    case "-CN":
+                        setField = value => config.SelectedComponents.Add(value);
+                        break;
+                    //параметры консольного режима
+                    case "-CMD":
+                    case "-ART":
+                    case "-PRM":
+                        setField = null;
+                        break;
                     default:
                         setField?.Invoke(startingArgs[i]);
                         setField = null;
