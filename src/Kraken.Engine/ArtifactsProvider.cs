@@ -33,7 +33,7 @@ namespace Kraken.Engine
 			var artifactsByName = new Dictionary<string, string>();
 			foreach (var artifactName in artifactNames)
 			{
-				var matchingArtifact = artifacts.Items.Single(a => a.Filename == artifactName);
+				var matchingArtifact = artifacts.Items.SingleOrDefault(a => a.Filename == artifactName);
 				if (matchingArtifact == null)
 				{
 					throw new ArtifactsProviderException(
