@@ -139,11 +139,22 @@ namespace Kraken
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show($"чёт не вышло {ex}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MessageBox.Show($"чёт не вышло :( {Environment.NewLine}{ExceptionToUserMessage(ex)}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 			finally
 			{
 				hideAllPanel.Visible = false;
+			}
+		}
+
+		private static string ExceptionToUserMessage(Exception ex)
+		{
+			switch (ex)
+			{
+				case ArtifactsProviderException artifactsProviderException:
+					return artifactsProviderException.Message;
+				default:
+					return ex.ToString();
 			}
 		}
 
