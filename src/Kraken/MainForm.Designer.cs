@@ -79,6 +79,9 @@
             this.button2.TabIndex = 3;
             this.button2.Text = "Применить Артефакт";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Anchor =
+	            ((System.Windows.Forms.AnchorStyles) (System.Windows.Forms.AnchorStyles.Bottom |
+	                                                  System.Windows.Forms.AnchorStyles.Left));
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // label2
@@ -134,6 +137,9 @@
             this.button3.TabIndex = 10;
             this.button3.Text = "Применить Переменные";
             this.button3.UseVisualStyleBackColor = true;
+            this.button3.Anchor =
+	            ((System.Windows.Forms.AnchorStyles) (System.Windows.Forms.AnchorStyles.Bottom |
+	                                                    System.Windows.Forms.AnchorStyles.Left));
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // selectedPathTb
@@ -151,6 +157,11 @@
             this.configurationTree.Size = new System.Drawing.Size(366, 480);
             this.configurationTree.TabIndex = 12;
             this.configurationTree.TabStop = false;
+            this.configurationTree.Anchor =
+	            ((System.Windows.Forms.AnchorStyles) ((((System.Windows.Forms.AnchorStyles.Top |
+	                                                     System.Windows.Forms.AnchorStyles.Bottom) |
+	                                                    System.Windows.Forms.AnchorStyles.Left) |
+	                                                   System.Windows.Forms.AnchorStyles.Right)));
             this.configurationTree.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.configurationTree_AfterCheck);
             // 
             // MainForm
