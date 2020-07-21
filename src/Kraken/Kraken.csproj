@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{03DFD79E-C68F-4D27-979F-721E9EC193AE}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <RootNamespace>Kraken</RootNamespace>
     <AssemblyName>Kraken</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -15,8 +16,10 @@ namespace Kraken.Engine
             this.artifactsProvider = artifactsProvider;
         }
 
-        public async Task ApplyConfigurations(string pathToSolutionRoot, IEnumerable<FileConfiguration> matchingCofigurtions, string environment)
+        public async Task ApplyConfigurations(string pathToSolutionRoot, IEnumerable<FileConfiguration> matchingCofigurtions, string environment, Action<decimal> prorgess = null)
         {
+            decimal progessPrecent = 0;
+            var step = 100m / (decimal)matchingCofigurtions.Count();
             foreach (var projectConfigurations in matchingCofigurtions.GroupBy(x => x.OctopusProject))
             {
                 var artifacts = await artifactsProvider.GetArtifacts(
@@ -26,6 +29,7 @@ namespace Kraken.Engine
                         .Where(x => !x.IsSubstitutionsOnly)
                         .Select(x => x.OctopusArtifactName)
                         .ToArray());
+
                 foreach (var fileConfiguration in projectConfigurations)
                 {
                     var file = Path.Combine(pathToSolutionRoot, fileConfiguration.PathToFile);
@@ -35,12 +39,16 @@ namespace Kraken.Engine
                         : ApplySubstitutions(File.ReadAllText(file), fileConfiguration.Substitutions);
 
                     File.WriteAllText(file, text);
+                    progessPrecent+= step ;
+                    prorgess?.Invoke(progessPrecent);
                 }
             }
         }
 
-        public async Task ApplyVariables(string pathToSolutionRoot, IEnumerable<FileConfiguration> matchingCofigurtions, string environment)
+        public async Task ApplyVariables(string pathToSolutionRoot, IEnumerable<FileConfiguration> matchingCofigurtions, string environment, Action<decimal> prorgess = null)
         {
+            decimal progessPrecent = 0;
+            var step = 100m / (decimal)matchingCofigurtions.Count();
             foreach (var projectConfigurations in matchingCofigurtions.GroupBy(x => x.OctopusProject))
             {
                 var vars = await artifactsProvider.GetVariables(environment, projectConfigurations.Key);
@@ -56,6 +64,8 @@ namespace Kraken.Engine
                     text = ApplySubstitutions(text, fileConfiguration.Substitutions);
 
                     File.WriteAllText(file, text);
+                    progessPrecent += step;
+                    prorgess?.Invoke(progessPrecent);
                 }
             }
         }

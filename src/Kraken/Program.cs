@@ -3,6 +3,7 @@ using Kraken.Engine;
 using System;
 using System.Linq;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -27,10 +28,13 @@ namespace Kraken
 				{
 					var console = new ConsoleWorker(
 						configurationsProvider, 
-						new OctopusWorker(new ArtifactsProvider(config.OctopusApiKey, config.OctopusEndpoint)),
-						new EnvironmentsProvider(config.OctopusApiKey, config.OctopusEndpoint));
+						new OctopusWorker(new ArtifactsProvider(config.OctopusApiKey, config.OctopusEndpoint)));
 					await console.Run(args, config.Environment, config.SolutionFolder, config.SelectedComponents);
 					return;
+				}
+				else
+				{
+					HideConsole();
 				}
 
 				Application.EnableVisualStyles();
@@ -51,5 +55,19 @@ namespace Kraken
 				return;
 			}
 		}
+
+		static void HideConsole()
+		{
+			var handle = GetConsoleWindow();
+			ShowWindow(handle, SW_HIDE);
+		}
+		[DllImport("kernel32.dll")]
+		static extern IntPtr GetConsoleWindow();
+
+		[DllImport("user32.dll")]
+		static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+		const int SW_HIDE = 0;
+		const int SW_SHOW = 5;
 	}
 }

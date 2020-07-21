@@ -18,13 +18,11 @@ namespace Kraken
 
         public ConsoleWorker(
             ConfigurationsProvider configurationsProvider,
-            OctopusWorker octopusWorker,
-            EnvironmentsProvider environmentsProvider)
+            OctopusWorker octopusWorker)
         {
 
             this.configurationsProvider = configurationsProvider;
             this.octopusWorker = octopusWorker;
-            this.environmentsProvider = environmentsProvider;
         }
 
         public async Task Run(string[] args, string environment, string solutionPath, IEnumerable<string> components)
