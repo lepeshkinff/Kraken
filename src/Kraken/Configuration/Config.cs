@@ -1,4 +1,6 @@
-﻿namespace Kraken.Configuration
+﻿using System.Collections.Generic;
+
+namespace Kraken.Configuration
 {
 	internal class Config
 	{
@@ -7,5 +9,6 @@
 		public string OctopusEndpoint { get; set; }
 		public string OctopusApiKey { get; set; }
 		public string[] ConfigurationPath { get; set; }
+		public List<string> SelectedComponents { get; set; } = new List<string>();
 	}
 }

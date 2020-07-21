@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -26,6 +27,7 @@ namespace Kraken.Engine
                         .Where(x => !x.IsSubstitutionsOnly)
                         .Select(x => x.OctopusArtifactName)
                         .ToArray());
+
                 foreach (var fileConfiguration in projectConfigurations)
                 {
                     var file = Path.Combine(pathToSolutionRoot, fileConfiguration.PathToFile);
