@@ -21,7 +21,7 @@ namespace Kraken.Engine
             foreach (var projectConfigurations in matchingCofigurtions.GroupBy(x => x.OctopusProject))
             {
                 var artifacts = await artifactsProvider.GetArtifacts(
-                    environment, 
+                    environment,
                     projectConfigurations.Key,
                     projectConfigurations
                         .Where(x => !x.IsSubstitutionsOnly)
@@ -109,6 +109,11 @@ namespace Kraken.Engine
 
         private static string ApplySubstitutions(string artifactText, Dictionary<string, string> substitutions)
         {
+            if (substitutions == null)
+            {
+                return artifactText;
+            }
+
             foreach (var substitution in substitutions)
             {
                 artifactText = Regex.Replace(artifactText, substitution.Key, substitution.Value, RegexOptions.IgnoreCase);
