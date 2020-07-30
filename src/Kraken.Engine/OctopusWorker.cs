@@ -34,7 +34,7 @@ namespace Kraken.Engine
 
                     string text = !fileConfiguration.IsSubstitutionsOnly
                         ? ApplySubstitutions(artifacts[fileConfiguration.OctopusArtifactName], fileConfiguration.Substitutions)
-                        : ApplySubstitutions(File.ReadAllText(file), fileConfiguration.Substitutions);
+                        : ApplySubstitutions(File.ReadAllText(file), fileConfiguration.Substitutions ?? new Dictionary<string, string>());
 
                     File.WriteAllText(file, text);
                 }
