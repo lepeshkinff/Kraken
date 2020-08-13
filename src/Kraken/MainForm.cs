@@ -99,6 +99,11 @@ namespace Kraken
 			}
 		}
 
+		private void SelectedEnvironmentChanged(object sender, EventArgs e)
+		{
+			cbUseAsDefault.Checked = EnvironmentCmb.SelectedItem.Equals(defaultEnvironment);
+		}
+		
 		private async void button2_Click(object sender, EventArgs e) =>
 			await ApplyInternal(octopusWorker.ApplyConfigurations);
 
@@ -108,7 +113,10 @@ namespace Kraken
 		private async Task ApplyInternal(Func<string, FileConfiguration[], string, Task> applyAction)
 		{
 			hideAllPanel.Visible = true;
-            UpdateLastSelectedEnvironment(EnvironmentCmb.Text);
+			if (cbUseAsDefault.Checked)
+			{
+				UpdateLastSelectedEnvironment(EnvironmentCmb.Text);
+			}
 
 			try
 			{
