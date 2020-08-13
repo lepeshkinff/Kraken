@@ -1,4 +1,6 @@
-﻿namespace Kraken
+﻿using System;
+
+namespace Kraken
 {
 	partial class MainForm
 	{
@@ -41,13 +43,14 @@
             this.button3 = new System.Windows.Forms.Button();
             this.selectedPathTb = new System.Windows.Forms.TextBox();
             this.configurationTree = new System.Windows.Forms.TreeView();
+            this.cbUseAsDefault = new System.Windows.Forms.CheckBox();
             this.hideAllPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(26, 82);
+            this.button1.Location = new System.Drawing.Point(25, 81);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(366, 23);
             this.button1.TabIndex = 0;
@@ -59,13 +62,14 @@
             // 
             this.EnvironmentCmb.Location = new System.Drawing.Point(67, 143);
             this.EnvironmentCmb.Name = "EnvironmentCmb";
-            this.EnvironmentCmb.Size = new System.Drawing.Size(325, 21);
+            this.EnvironmentCmb.Size = new System.Drawing.Size(227, 21);
             this.EnvironmentCmb.TabIndex = 1;
+            this.EnvironmentCmb.SelectedValueChanged += new EventHandler(this.SelectedEnvironmentChanged);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(23, 143);
+            this.label1.Location = new System.Drawing.Point(23, 146);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(38, 13);
             this.label1.TabIndex = 2;
@@ -73,15 +77,13 @@
             // 
             // button2
             // 
+            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button2.Location = new System.Drawing.Point(25, 693);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(172, 23);
             this.button2.TabIndex = 3;
             this.button2.Text = "Применить Артефакт";
             this.button2.UseVisualStyleBackColor = true;
-            this.button2.Anchor =
-	            ((System.Windows.Forms.AnchorStyles) (System.Windows.Forms.AnchorStyles.Bottom |
-	                                                  System.Windows.Forms.AnchorStyles.Left));
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // label2
@@ -104,7 +106,7 @@
             // 
             // label4
             // 
-            this.label4.Location = new System.Drawing.Point(26, 171);
+            this.label4.Location = new System.Drawing.Point(26, 167);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(366, 27);
             this.label4.TabIndex = 7;
@@ -131,38 +133,44 @@
             // 
             // button3
             // 
+            this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button3.Location = new System.Drawing.Point(203, 693);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(188, 23);
             this.button3.TabIndex = 10;
             this.button3.Text = "Применить Переменные";
             this.button3.UseVisualStyleBackColor = true;
-            this.button3.Anchor =
-	            ((System.Windows.Forms.AnchorStyles) (System.Windows.Forms.AnchorStyles.Bottom |
-	                                                    System.Windows.Forms.AnchorStyles.Left));
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // selectedPathTb
             // 
-            this.selectedPathTb.Location = new System.Drawing.Point(25, 114);
+            this.selectedPathTb.Location = new System.Drawing.Point(25, 117);
             this.selectedPathTb.Name = "selectedPathTb";
             this.selectedPathTb.Size = new System.Drawing.Size(366, 20);
             this.selectedPathTb.TabIndex = 11;
             // 
             // configurationTree
             // 
+            this.configurationTree.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.configurationTree.CheckBoxes = true;
-            this.configurationTree.Location = new System.Drawing.Point(25, 201);
+            this.configurationTree.Location = new System.Drawing.Point(25, 206);
             this.configurationTree.Name = "configurationTree";
-            this.configurationTree.Size = new System.Drawing.Size(366, 480);
+            this.configurationTree.Size = new System.Drawing.Size(366, 475);
             this.configurationTree.TabIndex = 12;
             this.configurationTree.TabStop = false;
-            this.configurationTree.Anchor =
-	            ((System.Windows.Forms.AnchorStyles) ((((System.Windows.Forms.AnchorStyles.Top |
-	                                                     System.Windows.Forms.AnchorStyles.Bottom) |
-	                                                    System.Windows.Forms.AnchorStyles.Left) |
-	                                                   System.Windows.Forms.AnchorStyles.Right)));
             this.configurationTree.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.configurationTree_AfterCheck);
+            // 
+            // cbUseAsDefault
+            // 
+            this.cbUseAsDefault.AutoSize = true;
+            this.cbUseAsDefault.Location = new System.Drawing.Point(301, 147);
+            this.cbUseAsDefault.Name = "cbUseAsDefault";
+            this.cbUseAsDefault.Size = new System.Drawing.Size(91, 17);
+            this.cbUseAsDefault.TabIndex = 8;
+            this.cbUseAsDefault.Text = "по умолчаню";
+            this.cbUseAsDefault.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
@@ -170,14 +178,15 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(431, 728);
             this.Controls.Add(this.hideAllPanel);
+            this.Controls.Add(this.cbUseAsDefault);
             this.Controls.Add(this.selectedPathTb);
             this.Controls.Add(this.label4);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.button2);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.EnvironmentCmb);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.configurationTree);
             this.MaximizeBox = false;
@@ -207,5 +216,6 @@
 		private System.Windows.Forms.Button button3;
 		private System.Windows.Forms.TextBox selectedPathTb;
         private System.Windows.Forms.TreeView configurationTree;
+        private System.Windows.Forms.CheckBox cbUseAsDefault;
     }
 }
