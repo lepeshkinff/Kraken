@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -38,7 +39,16 @@ namespace Kraken.Engine
 					await LoadFileUri(list, errors, uriResult);
 				}
 			}
-			return new ConfigurationsLoadResult(list, errors);
+			return new ConfigurationsLoadResult(RemoveDuplicates(list), errors);
+		}
+
+		private List<FileConfiguration> RemoveDuplicates(List<FileConfiguration> list)
+		{
+			return list
+				.GroupBy(x => x, x=> x, new FileConfigurationEqualityComparer())
+				.Select(x => x.First())
+				.ToList();
+				
 		}
 
 		private async Task LoadFileUri(List<FileConfiguration> list, List<string> errors, Uri uri)
